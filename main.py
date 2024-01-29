@@ -11,22 +11,14 @@ class Item(BaseModel):
     description: Union[str, None] = None
     price: float
     tax: Union[float, None] = None
-
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "name": "Foo",
-                    "description": "A very nice Item",
-                    "price": 35.4,
-                    "tax": 3.2,
-                }
-            ]
-        }
-    }
+    tags: set[str] = set()
 
 
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, item: Item):
-    results = {"item_id": item_id, "item": item}
-    return results
+@app.post(
+    "/items/",
+    response_model=Item,
+    summary="Create an item",
+    description="Create an item with all the information, name, description, price, tax and a set of unique tags",
+)
+async def create_item(item: Item):
+    return item
